@@ -56,7 +56,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             const Spacer(),//relative spacing - ie , change the space according to requirement
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Image.asset(widget.product['imageUrl'] as String),
+              child: Image.asset(widget.product['imageUrl'] as String , height:250),
             ),
             const Spacer(flex:2),
             Container(

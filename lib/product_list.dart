@@ -42,6 +42,8 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     const border = OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Color.fromRGBO(225, 225, 225, 1) 
@@ -122,7 +124,8 @@ class _ProductListState extends State<ProductList> {
           Expanded(
             child: AnimatedSwitcher(
             duration: Duration(milliseconds: 400),
-            child: ListView.builder(
+            child:size.width<650 
+            ?ListView.builder(
               key: ValueKey<String>(selectedFilter + searchQuery), // So AnimatedSwitcher knows when to rebuild
               itemCount: filteredProducts.length,
               itemBuilder: (context, index) {
@@ -145,6 +148,33 @@ class _ProductListState extends State<ProductList> {
                     ?const Color.fromRGBO(216, 240, 253, 1) 
                     :const Color.fromRGBO(245, 247, 249, 1),
                     ),
+                );
+              },
+            )
+            :GridView.builder(
+              key: ValueKey<String>(selectedFilter + searchQuery), // So AnimatedSwitcher knows when to rebuild
+              itemCount: filteredProducts.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2),
+              itemBuilder: (context, index) {
+                final product = filteredProducts[index];
+                return GestureDetector(//transition from one page to another
+                onTap: () {
+                  Navigator.of(context).push(//these are platform adaptive
+                    MaterialPageRoute(
+                      builder: (context){
+                        return ProductDetailsPage(product: product);
+                      }
+                    )
+                  );
+                },
+                child: ProductCard(
+                  title:product['title'] as String,
+                  price:product['price'] as double,
+                  image:product['imageUrl'] as String,//we need to pass it as string as its assumed to be an object
+                  backgroundColor: index.isEven 
+                  ?const Color.fromRGBO(216, 240, 253, 1) 
+                  :const Color.fromRGBO(245, 247, 249, 1),
+                ),
                 );
               },
             ),
